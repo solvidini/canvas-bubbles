@@ -112,7 +112,7 @@ class Particle {
       if (this === particles[i]) continue;
       if (
         distance(this.x, this.y, particles[i].x, particles[i].y) <
-        this.radius * 2
+        this.radius + particles[i].radius
       ) {
         if (this.hold) {
           particles[i].velocity.x = 0;
@@ -161,10 +161,10 @@ class Particle {
       this.y = this.holdY + mouse.y;
     }
 
-    // check if stagnancy
+    // check stagnancy
     if (this.velocity.x === 0 && this.velocity.y === 0) {
       this.color = 'red';
-    } else {
+    } else  {
       this.color = this.baseColor
     }
 
