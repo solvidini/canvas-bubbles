@@ -5,7 +5,7 @@ import {
   resolveCollision,
 } from "./utils.js";
 
-console.log("works");
+const options = document.querySelector("#options");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -18,11 +18,39 @@ const mouse = {
   y: innerHeight / 2,
 };
 
-const numberOfParticles = 50;
-const friction = 0.95;
+let amountOfParticles = 25;
+let friction = 0.95;
 const colors = ["#f98593", "#da86f9", "#fcace0", "#9fcbf9"];
 
 // Event Listeners
+options.addEventListener("submit", (event) => {
+  event.preventDefault();
+  let particlesValue = options.elements.particlesAmount.value;
+  let frictionValue = options.elements.friction.value;
+
+  if (particlesValue.trim() === "") {
+    amountOfParticles = 25;
+  } else if (!isNaN(particlesValue.trim())) {
+    amountOfParticles = particlesValue.trim();
+  } else {
+    alert("Wrong amount of particles!");
+  }
+
+  if (frictionValue.trim() === "") {
+    friction = 0.95;
+  } else if (
+    !isNaN(frictionValue.trim()) &&
+    frictionValue >= 0 &&
+    frictionValue <= 1
+  ) {
+    friction = frictionValue.trim();
+  } else {
+    alert("Wrong friction number!");
+  }
+
+  init();
+});
+
 addEventListener("mousemove", (event) => {
   mouse.x = event.clientX;
   mouse.y = event.clientY;
@@ -163,9 +191,9 @@ class Particle {
 
     // check stagnancy
     if (this.velocity.x === 0 && this.velocity.y === 0) {
-      this.color = 'red';
-    } else  {
-      this.color = this.baseColor
+      this.color = "red";
+    } else {
+      this.color = this.baseColor;
     }
 
     // change coordinates by velocity
@@ -180,19 +208,33 @@ let particles;
 function init() {
   particles = [];
 
-  for (let i = 0; i < numberOfParticles; i++) {
-    const radius = Math.random() * 20 + 40;
+  for (let i = 0; i < amountOfParticles; i++) {
+    let infiniteLoopDetector = 0;
+    const radius = Math.random() * 20 + 30;
     let x = randomIntFromRange(radius, canvas.width - radius);
     let y = randomIntFromRange(radius, canvas.height - radius);
     const color = randomColor(colors);
 
     if (i !== 0) {
       for (let j = 0; j < particles.length; j++) {
-        if (distance(x, y, particles[j].x, particles[j].y) < radius * 2) {
+        if (
+          distance(x, y, particles[j].x, particles[j].y) <
+          radius + particles[j].radius
+        ) {
           x = randomIntFromRange(radius, canvas.width - radius);
           y = randomIntFromRange(radius, canvas.height - radius);
 
           j = -1;
+          infiniteLoopDetector++;
+
+          if (infiniteLoopDetector > 3000) {
+            amountOfParticles = 2;
+            infiniteLoopDetector = 0;
+            alert(
+              "Too many particles for current screen size! Decrease the amount!"
+            );
+            init();
+          }
         }
       }
     }
