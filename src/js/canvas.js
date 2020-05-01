@@ -18,8 +18,10 @@ const mouse = {
   y: innerHeight / 2,
 };
 
-let amountOfParticles = 25;
-let friction = 0.95;
+let amountOfParticles = 40;
+let friction = 0.99;
+let maxRadius = 50;
+let minRadius = 35;
 const colors = ["#f98593", "#da86f9", "#fcace0", "#9fcbf9"];
 
 // Event Listeners
@@ -27,25 +29,72 @@ options.addEventListener("submit", (event) => {
   event.preventDefault();
   let particlesValue = options.elements.particlesAmount.value;
   let frictionValue = options.elements.friction.value;
+  let maxRadiusValue = options.elements.maxRadius.value;
+  let minRadiusValue = options.elements.minRadius.value;
 
-  if (particlesValue.trim() === "") {
-    amountOfParticles = 25;
-  } else if (!isNaN(particlesValue.trim())) {
-    amountOfParticles = particlesValue.trim();
-  } else {
-    alert("Wrong amount of particles!");
-  }
+  try {
+    if (particlesValue.trim() === "") {
+      amountOfParticles = 40;
+    } else if (!isNaN(particlesValue.trim())) {
+      if (particlesValue > 0) {
+        amountOfParticles = particlesValue.trim();
+      } else {
+        throw new Error("Amount of particles must be a positive value!");
+      }
+    } else {
+      throw new Error("Wrong amount of particles!");
+    }
 
-  if (frictionValue.trim() === "") {
-    friction = 0.95;
-  } else if (
-    !isNaN(frictionValue.trim()) &&
-    frictionValue >= 0 &&
-    frictionValue <= 1
-  ) {
-    friction = frictionValue.trim();
-  } else {
-    alert("Wrong friction number!");
+    if (frictionValue.trim() === "") {
+      friction = 0.99;
+    } else if (!isNaN(frictionValue.trim())) {
+      if (frictionValue >= 0 && frictionValue <= 1) {
+        friction = frictionValue.trim();
+      } else {
+        throw new Error("Friction value must be between 0 and 1");
+      }
+    } else {
+      throw new Error("Wrong friction number!");
+    }
+
+    if (maxRadiusValue.trim() === "") {
+      maxRadius = 50;
+    } else if (!isNaN(maxRadiusValue)) {
+      if (maxRadiusValue > 160) {
+        throw new Error("Max radius value cannot be higher than 160!");
+      } else if (maxRadiusValue < 20) {
+        throw new Error("Max radius value cannot be lower than 20!");
+      } else {
+        maxRadius = parseInt(maxRadiusValue);
+      }
+    } else {
+      throw new Error("Wrong max radius number!");
+    }
+
+    if (minRadiusValue.trim() === "") {
+      minRadius = 35;
+    } else if (!isNaN(minRadiusValue)) {
+      if (minRadiusValue < 15) {
+        throw new Error("Min radius value cannot be lower than 15!");
+      } else if (minRadiusValue > 150) {
+        throw new Error("Min radius value cannot be higher than 150!");
+      } else {
+        minRadius = parseInt(minRadiusValue);
+      }
+    } else {
+      throw new Error("Wrong min radius number!");
+    }
+
+    maxRadiusValue = maxRadiusValue ? maxRadiusValue : 50;
+    minRadiusValue = minRadiusValue ? minRadiusValue : 35;
+
+    if (parseInt(minRadiusValue) > parseInt(maxRadiusValue)) {
+      maxRadius = 50;
+      minRadius = 35;
+      throw new Error("Max radius must be higher than min radius!");
+    }
+  } catch (error) {
+    alert(error);
   }
 
   init();
@@ -104,7 +153,7 @@ addEventListener("mouseup", (event) => {
 
 // Objects
 class Particle {
-  constructor(x, y, radius, color) {
+  constructor(x, y, radius, color, mass) {
     this.x = x;
     this.y = y;
     this.velocity = {
@@ -114,7 +163,7 @@ class Particle {
     this.radius = radius;
     this.color = color;
     this.baseColor = color;
-    this.mass = 1;
+    this.mass = mass;
     this.opacity = 0;
     this.hold = false;
     this.holdX;
@@ -174,7 +223,7 @@ class Particle {
 
     // mouse near particles
     if (
-      distance(mouse.x, mouse.y, this.x, this.y) < 200 &&
+      distance(mouse.x, mouse.y, this.x, this.y) < 250 &&
       this.opacity < 0.8
     ) {
       this.opacity += 0.02;
@@ -210,10 +259,12 @@ function init() {
 
   for (let i = 0; i < amountOfParticles; i++) {
     let infiniteLoopDetector = 0;
-    const radius = Math.random() * 20 + 30;
+    const radius = randomIntFromRange(minRadius, maxRadius);
     let x = randomIntFromRange(radius, canvas.width - radius);
     let y = randomIntFromRange(radius, canvas.height - radius);
     const color = randomColor(colors);
+    // const mass = radius;
+    const mass = 1;
 
     if (i !== 0) {
       for (let j = 0; j < particles.length; j++) {
@@ -227,7 +278,7 @@ function init() {
           j = -1;
           infiniteLoopDetector++;
 
-          if (infiniteLoopDetector > 3000) {
+          if (infiniteLoopDetector > 100000) {
             amountOfParticles = 2;
             infiniteLoopDetector = 0;
             alert(
@@ -239,7 +290,7 @@ function init() {
       }
     }
 
-    particles.push(new Particle(x, y, radius, color));
+    particles.push(new Particle(x, y, radius, color, mass));
   }
 }
 

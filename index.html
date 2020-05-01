@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Canvas Project One - Samuel Kędziora</title>
+    <link rel="stylesheet" type="text/css" href="./src/css/main.css" />
+		<meta name="author" content="Samuel Kędziora" />
+  </head>
+  <body>
+    <div class="app">
+      <form id="options" class="options">
+        <div class="options__item">
+          <label class="options__item-label" for="particlesAmount"
+            >Amount of particles</label
+          >
+          <input
+            class="options__item-input"
+            type="text"
+            name="particlesAmount"
+            id="particlesAmount"
+            placeholder="40 is the default"
+          />
+        </div>
+        <div class="options__item">
+          <label class="options__item-label" for="friction"
+            >Friction (From 0 to 1)</label
+          >
+          <input
+            class="options__item-input"
+            type="text"
+            name="friction"
+            id="friction"
+            placeholder="0.99 is the default"
+          />
+        </div>
+        <div class="options__item">
+          <label class="options__item-label" for="maxRadius"
+            >Max particle radius</label
+          >
+          <input
+            class="options__item-input"
+            type="text"
+            name="maxRadius"
+            id="maxRadius"
+            placeholder="50 is the default"
+          />
+        </div>
+        <div class="options__item">
+          <label class="options__item-label" for="minRadius"
+            >Min particle radius</label
+          >
+          <input
+            class="options__item-input"
+            type="text"
+            name="minRadius"
+            id="minRadius"
+            placeholder="35 is the default"
+          />
+        </div>
+        <button type="input" class="options__submit">Accept</button>
+      </form>
+      <canvas></canvas>
+    </div>
+    <script src="./src/js/canvas.js" type="module"></script>
+  </body>
+</html>

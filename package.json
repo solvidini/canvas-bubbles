@@ -1,13 +1,14 @@
 {
   "name": "canvas-project-one",
   "version": "1.0.0",
+	"author": "Samuel Kędziora <samukedo@gmail.com>",
+	"private": false,
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "live-server --port=3003 --host=localhost --open=./src",
+    "start": "live-server --port=3003 --host=localhost",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "live-server": "^1.2.1"
