@@ -38,7 +38,6 @@ function rotate(velocity, angle) {
  *
  * @param  Object | particle      | A particle object with x and y coordinates, plus velocity
  * @param  Object | otherParticle | A particle object with x and y coordinates, plus velocity
- * @return Null | Does not return a value
  */
 
 function resolveCollision(particle, otherParticle) {
