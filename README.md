@@ -7,7 +7,7 @@ What I used to create this:
 * JavaScript 
 
 ## Live
-during development
+https://ssazero.github.io/canvas-project-one/
 
 ## Author
 Samuel Kędziora
