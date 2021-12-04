@@ -2,13 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Canvas Project One - Samuel Kędziora</title>
+    <title>Canvas Bubbles v1.2.0</title>
     <link rel="stylesheet" type="text/css" href="./static/css/main.css" />
-		<meta name="author" content="Samuel Kędziora" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Samuel Kędziora" />
+    <meta
+      name="description"
+      content="Here you can experience things like particles colliding, catching them, moving them, shooting etc."
+    />
+    <meta
+      name="keywords"
+      content="Samuel, Kedziora, Kędziora, web, mern stack, web dev, developer, frontend, JavaScript, React, site, portfolio, katowice, silesia, website, backend, nodejs, node, native, mobile, full-stack, particles, colliding, catching, moving, shooting"
+    />
   </head>
   <body>
     <div class="app">
       <form id="options" class="options">
+        <div class="options__toggler" title="Hide options"></div>
         <div class="options__item">
           <label class="options__item-label" for="particlesAmount"
             >Amount of particles</label
@@ -62,5 +72,6 @@
       <canvas></canvas>
     </div>
     <script src="./static/js/canvas.js" type="module"></script>
+    <script src="./static/js/options.js" type="module"></script>
   </body>
 </html>

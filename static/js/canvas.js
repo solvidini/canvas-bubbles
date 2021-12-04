@@ -13,7 +13,7 @@ const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-const mouse = {
+const position = {
   x: innerWidth / 2,
   y: innerHeight / 2,
 };
@@ -22,7 +22,7 @@ let amountOfParticles = 40;
 let friction = 0.99;
 let maxRadius = 50;
 let minRadius = 35;
-const colors = ["#f98593", "#da86f9", "#fcace0", "#9fcbf9"];
+const colors = ["#f3c33e", "#e5d681", "#daac2f", "#ffdf85"];
 
 // Event Listeners
 options.addEventListener("submit", (event) => {
@@ -100,56 +100,70 @@ options.addEventListener("submit", (event) => {
   init();
 });
 
-addEventListener("mousemove", (event) => {
-  mouse.x = event.clientX;
-  mouse.y = event.clientY;
-});
+const touchMove = (event) => {
+  const touch = event?.touches?.[0];
+  if (touch) {
+    position.x = touch.clientX;
+    position.y = touch.clientY;
+  }
+  position.x = event.clientX;
+  position.y = event.clientY;
+};
 
-addEventListener("resize", () => {
+canvas.addEventListener("mousemove", touchMove);
+canvas.addEventListener("touchmove", touchMove);
+
+canvas.addEventListener("resize", () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
 
   init();
 });
 
-addEventListener("contextmenu", (event) => {
+canvas.addEventListener("contextmenu", (event) => {
   event.preventDefault();
   for (let i = 0; i < particles.length; i++) {
     if (
-      distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <=
+      distance(position.x, position.y, particles[i].x, particles[i].y) <=
       particles[i].radius
     ) {
-      particles[i].velocity.x = (particles[i].x - mouse.x) * 0.7;
-      particles[i].velocity.y = (particles[i].y - mouse.y) * 0.7;
+      particles[i].velocity.x = (particles[i].x - position.x) * 0.7;
+      particles[i].velocity.y = (particles[i].y - position.y) * 0.7;
     }
   }
 });
 
-addEventListener("mousedown", (event) => {
+const touchStart = () => {
   for (let i = 0; i < particles.length; i++) {
     if (
-      distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <=
+      distance(position.x, position.y, particles[i].x, particles[i].y) <=
       particles[i].radius
     ) {
       particles[i].velocity.x = 0;
       particles[i].velocity.y = 0;
-      particles[i].holdX = particles[i].x - mouse.x;
-      particles[i].holdY = particles[i].y - mouse.y;
+      particles[i].holdX = particles[i].x - position.x;
+      particles[i].holdY = particles[i].y - position.y;
       particles[i].hold = true;
     }
   }
-});
+};
 
-addEventListener("mouseup", (event) => {
+canvas.addEventListener("mousedown", touchStart);
+canvas.addEventListener("touchstart", touchStart);
+
+const touchEnd = () => {
   for (let i = 0; i < particles.length; i++) {
     if (
-      distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <=
+      distance(position.x, position.y, particles[i].x, particles[i].y) <=
       particles[i].radius
     ) {
       particles[i].hold = false;
     }
   }
-});
+};
+
+canvas.addEventListener("mouseup", touchEnd);
+canvas.addEventListener("touchend", touchEnd);
 
 // Objects
 class Particle {
@@ -221,9 +235,9 @@ class Particle {
       this.velocity.y = this.velocity.y * friction;
     }
 
-    // mouse near particles
+    // position near particles
     if (
-      distance(mouse.x, mouse.y, this.x, this.y) < 250 &&
+      distance(position.x, position.y, this.x, this.y) < 500 &&
       this.opacity < 0.8
     ) {
       this.opacity += 0.02;
@@ -234,13 +248,13 @@ class Particle {
 
     // is on hold
     if (this.hold) {
-      this.x = this.holdX + mouse.x;
-      this.y = this.holdY + mouse.y;
+      this.x = this.holdX + position.x;
+      this.y = this.holdY + position.y;
     }
 
     // check stagnancy
     if (this.velocity.x === 0 && this.velocity.y === 0) {
-      this.color = "red";
+      this.color = "#ee3462";
     } else {
       this.color = this.baseColor;
     }
@@ -281,7 +295,7 @@ function init() {
           if (infiniteLoopDetector > 100000) {
             amountOfParticles = 2;
             infiniteLoopDetector = 0;
-            alert(
+            console.warn(
               "Too many particles for current screen size! Decrease the amount!"
             );
             init();
