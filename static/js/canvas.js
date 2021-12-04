@@ -120,7 +120,7 @@ canvas.addEventListener("resize", () => {
   init();
 });
 
-canvas.addEventListener("contextmenu", (event) => {
+const shoot = (event) => {
   event.preventDefault();
   for (let i = 0; i < particles.length; i++) {
     if (
@@ -131,7 +131,10 @@ canvas.addEventListener("contextmenu", (event) => {
       particles[i].velocity.y = (particles[i].y - position.y) * 0.7;
     }
   }
-});
+};
+
+canvas.addEventListener("contextmenu", shoot);
+canvas.addEventListener("dblclick", shoot);
 
 const touchStart = () => {
   for (let i = 0; i < particles.length; i++) {
