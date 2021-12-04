@@ -295,7 +295,7 @@ function init() {
           if (infiniteLoopDetector > 100000) {
             amountOfParticles = 2;
             infiniteLoopDetector = 0;
-            alert(
+            console.warn(
               "Too many particles for current screen size! Decrease the amount!"
             );
             init();
