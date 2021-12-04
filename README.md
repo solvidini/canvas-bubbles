@@ -1,13 +1,13 @@
-# Canvas Project One
-This is my first canvas project. You can experience here things like particles collision and also you can grab them, move them, shot them, etc.
+# Canvas Bubbles
+This is my first canvas project. Here you can experience things like particles colliding, catching them, moving them, shooting etc.
 
 ## Technologies
-What I used to create this:
+What I used to create this project:
 * HTML5 Canvas
 * JavaScript 
 
 ## Live
-https://ssazero.github.io/canvas-project-one/
+https://ssazero.github.io/canvas-bubbles/
 
 ## Author
 Samuel Kędziora
